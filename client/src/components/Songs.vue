@@ -48,9 +48,6 @@
             </v-flex>
           </v-layout>
 
-          {{song.title}} --
-          {{song.artist}} --
-          {{song.album}}
         </div>
       </panel>
     </v-flex>
