@@ -31,7 +31,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-
+.toolbar--fixed{z-index:10}
 .danger-alert {
   color: red;
 }

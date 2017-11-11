@@ -8,14 +8,10 @@
 </template>
 
 <script>
-import Panel from '@/components/Panel'
 export default {
   props: [
     'song'
-  ],
-  components: {
-    Panel
-  }
+  ]
 }
 </script>
 
@@ -29,6 +25,6 @@ textarea {
   border-style: none;
   border-color: transparent;
   overflow: auto;
-  padding: 40px;
+  padding: 20px;
 }
 </style>
