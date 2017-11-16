@@ -1,6 +1,14 @@
 <template>
-  <v-layout column>
-    <v-flex xs6 offset-xs3>
+  <v-layout>
+    <v-flex xs6 v-if="isUserLoggedIn">
+      <songs-bookmarks />
+      <recently-viewed-songs class="mt-2" />
+    </v-flex>
+
+    <v-flex :class="{
+        xs12: !isUserLoggedIn,
+        xs6: isUserLoggedIn
+      }" class="ml-2">
       <songs-search-panel />
       <songs-panel class="mt-2" />
     </v-flex>
@@ -9,12 +17,22 @@
 
 <script>
 import SongsPanel from './SongsPanel'
+import SongsBookmarks from './SongsBookmarks'
+import RecentlyViewedSongs from './RecentlyViewedSongs'
 import SongsSearchPanel from './SongsSearchPanel'
 import SongsService from '@/services/SongsService'
+import {mapState} from 'vuex'
 export default {
   components: {
     SongsPanel,
-    SongsSearchPanel
+    SongsSearchPanel,
+    SongsBookmarks,
+    RecentlyViewedSongs
+  },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn'
+    ])
   },
   data () {
     return {
@@ -27,7 +45,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .song {
   padding: 20px;
@@ -44,7 +61,7 @@ export default {
   font-size: 18px;
 }
 .album-image {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
 }
 </style>

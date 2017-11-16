@@ -1,56 +1,54 @@
 <template>
-<panel title="Song Metadata">
-  <v-layout>
-    <v-flex xs6>
+  <panel title="Song Metadata">
+    <v-layout>
+      <v-flex xs6>
+        <div class="song-title">
+          {{song.title}}
+        </div>
+        <div class="song-artist">
+          {{song.artist}}
+        </div>
+        <div class="song-genre">
+          {{song.genre}}
+        </div>
 
-      <div class="song-title">
-        {{song.title}}
-      </div>
-      <div class="song-artist">
-        {{song.artist}}
-      </div>
-      <div class="song-genre">
-        {{song.genre}}
-      </div>
-
-      <v-btn
-        dark
-        class="cyan"
-        :to="{
-          name: 'song-edit',
-          params () { 
-            return {
-              songId: song.id
+        <v-btn
+          dark
+          class="cyan"
+          :to="{
+            name: 'song-edit', 
+            params () {
+              return {
+                songId: song.id
+              }
             }
-          }
-        }">
-        Edit
-      </v-btn>
+          }">
+          Edit
+        </v-btn>
 
-      <v-btn
-        v-if="isUserLoggedIn && !bookmark"
-        dark
-        class="cyan"
-        @click="setAsBookmark">
-        Set As Bookmark
-      </v-btn>
+        <v-btn
+          v-if="isUserLoggedIn && !bookmark"
+          dark
+          class="cyan"
+          @click="setAsBookmark">
+          Set As Bookmark
+        </v-btn>
 
-      <v-btn
-        v-if="isUserLoggedIn && bookmark"
-        dark
-        class="cyan"
-        @click="unsetAsBookmark">
-        Unset As Bookmark
-      </v-btn>
+        <v-btn
+          v-if="isUserLoggedIn && bookmark"
+          dark
+          class="cyan"
+          @click="unsetAsBookmark">
+          Unset As Bookmark
+        </v-btn>
+      </v-flex>
 
-    </v-flex>
-
-    <v-flex xs6>
-      <img class="album-image" :src="song.albumImageUrl" />
-      <br>
-      {{song.album}}
-    </v-flex>
-  </v-layout>
+      <v-flex xs6>
+        <img class="album-image" :src="song.albumImageUrl" />
+        <br>
+        {{song.album}}
+      </v-flex>
+    </v-layout>
   </panel>
 </template>
 
@@ -68,7 +66,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'isUserLoggedIn'
+      'isUserLoggedIn',
+      'user'
     ])
   },
   watch: {
@@ -76,12 +75,13 @@ export default {
       if (!this.isUserLoggedIn) {
         return
       }
-
       try {
-        this.bookmark = (await BookmarksService.index({
-          songId: this.song.id,
-          userId: this.$store.state.user.id
+        const bookmarks = (await BookmarksService.index({
+          songId: this.song.id
         })).data
+        if (bookmarks.length) {
+          this.bookmark = bookmarks[0]
+        }
       } catch (err) {
         console.log(err)
       }
@@ -91,8 +91,7 @@ export default {
     async setAsBookmark () {
       try {
         this.bookmark = (await BookmarksService.post({
-          songId: this.song.id,
-          userId: this.$store.state.user.id
+          songId: this.song.id
         })).data
       } catch (err) {
         console.log(err)
@@ -110,7 +109,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .song {
   padding: 20px;
@@ -127,7 +125,7 @@ export default {
   font-size: 18px;
 }
 .album-image {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
 }
 </style>
